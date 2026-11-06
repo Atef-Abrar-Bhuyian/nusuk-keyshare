@@ -1,0 +1,2 @@
+- A key's "done" mark is personal to the device: store it in localStorage (`keys_done_ids`), never in the shared `public.keys` table, so marking a key done never blocks other users.
+- `public.keys` is a fully anonymous shared table: anon SELECT/INSERT only, no UPDATE/DELETE. Keys are deduplicated with a UNIQUE constraint on `key_text` (uploads use upsert with ignoreDuplicates).

@@ -1,0 +1,3 @@
+- [x] Finish the warm welcome, thank-you section, key list styling, and fonts.
+- [x] Change the icon-only actions to labeled Copy and Done buttons, with Undo for marked keys.
+- [x] Verify the finished screen and existing personal done behavior.
