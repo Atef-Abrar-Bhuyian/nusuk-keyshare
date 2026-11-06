@@ -7,14 +7,12 @@ const STORAGE_KEY = "keys_not_working_ids";
  * and are never sent to the shared list, so other users can still try the key.
  */
 export function useNotWorkingKeys() {
-  const { ids, toggle, add, remove, clearAll, hydrated } = useLocalIdSet(STORAGE_KEY);
+  const { ids, toggle, remove, hydrated } = useLocalIdSet(STORAGE_KEY);
 
   return {
     notWorkingIds: ids,
     toggleNotWorking: toggle,
-    markNotWorking: add,
     unmarkNotWorking: remove,
-    clearAllNotWorking: clearAll,
     hydrated,
   };
 }

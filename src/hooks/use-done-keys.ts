@@ -7,12 +7,11 @@ const STORAGE_KEY = "keys_done_ids";
  * never sent to the shared list, so other users can still use the same key.
  */
 export function useDoneKeys() {
-  const { ids, toggle, add, remove, clearAll, hydrated } = useLocalIdSet(STORAGE_KEY);
+  const { ids, toggle, remove, clearAll, hydrated } = useLocalIdSet(STORAGE_KEY);
 
   return {
     doneIds: ids,
     toggleDone: toggle,
-    markDone: add,
     unmarkDone: remove,
     clearAllDone: clearAll,
     hydrated,
