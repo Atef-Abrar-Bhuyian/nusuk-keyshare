@@ -739,7 +739,19 @@ function DarudPanel() {
 const MAX_KEYS_PER_BATCH = 500;
 const MAX_KEY_LENGTH = 300;
 
+const CONTACT_EMAIL = "atefabrar101@gmail.com";
+
 function InfoPanel() {
+  const [emailCopied, setEmailCopied] = useState(false);
+
+  const copyEmail = async () => {
+    const ok = await copyText(CONTACT_EMAIL);
+    if (ok) {
+      setEmailCopied(true);
+      window.setTimeout(() => setEmailCopied(false), 1500);
+    }
+  };
+
   return (
     <>
       <header className="sticky top-0 z-10 border-b border-border bg-background/95 px-4 py-4 backdrop-blur">
@@ -849,6 +861,38 @@ function InfoPanel() {
               Your done / not-working marks are stored only in your browser and are never sent to
               the server or shared with anyone.
             </p>
+          </InfoCard>
+
+          {/* Contact / feedback */}
+          <InfoCard
+            icon={<HelpCircle className="size-5 text-sky-500" />}
+            title="Feedback & contact"
+            accent="blue"
+          >
+            <p>
+              Have a suggestion, found a bug, or just want to say something?
+              Feel free to reach out — we'd love to hear from you.
+            </p>
+            <div className="mt-3 flex items-center gap-2">
+              <a
+                href={`mailto:${CONTACT_EMAIL}`}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-xs font-medium text-foreground transition-colors hover:bg-accent"
+              >
+                {CONTACT_EMAIL}
+              </a>
+              <button
+                type="button"
+                onClick={copyEmail}
+                aria-label={emailCopied ? "Copied" : "Copy email address"}
+                className={cn(
+                  "flex items-center gap-1 rounded-lg border border-border bg-background px-2.5 py-2 text-xs font-medium transition-colors hover:bg-accent",
+                  emailCopied ? "text-primary" : "text-muted-foreground",
+                )}
+              >
+                <Copy className="size-3.5" />
+                {emailCopied ? "Copied!" : "Copy"}
+              </button>
+            </div>
           </InfoCard>
 
         </div>
