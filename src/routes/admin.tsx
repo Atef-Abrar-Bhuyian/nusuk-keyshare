@@ -42,10 +42,7 @@ import {
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
-    meta: [
-      { title: "Admin | Nusuk Keys" },
-      { name: "robots", content: "noindex, nofollow" },
-    ],
+    meta: [{ title: "Admin | Nusuk Keys" }, { name: "robots", content: "noindex, nofollow" }],
   }),
   component: AdminPage,
 });
@@ -167,10 +164,7 @@ function LoginPage({ onLogin }: { onLogin: (token: string, email: string) => voi
         </div>
 
         {/* Form card */}
-        <form
-          onSubmit={submit}
-          className="rounded-2xl border border-border bg-card p-6 shadow-sm"
-        >
+        <form onSubmit={submit} className="rounded-2xl border border-border bg-card p-6 shadow-sm">
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
               <label htmlFor="admin-email" className="text-sm font-medium text-foreground">
@@ -216,7 +210,11 @@ function LoginPage({ onLogin }: { onLogin: (token: string, email: string) => voi
               disabled={loading}
               className="flex h-10 items-center justify-center gap-2 rounded-lg bg-primary text-sm font-semibold text-primary-foreground transition-opacity disabled:opacity-60 hover:opacity-90"
             >
-              {loading ? <Loader2 className="size-4 animate-spin" /> : <Shield className="size-4" />}
+              {loading ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <Shield className="size-4" />
+              )}
               {loading ? "Signing in…" : "Sign in"}
             </button>
           </div>
@@ -389,15 +387,9 @@ function AdminDashboard({
           </div>
         ) : (
           <>
-            {tab === "keys" && (
-              <KeysTab keys={keys} token={session.token} onRefresh={loadAll} />
-            )}
+            {tab === "keys" && <KeysTab keys={keys} token={session.token} onRefresh={loadAll} />}
             {tab === "duplicates" && (
-              <DuplicatesTab
-                groups={duplicateGroups}
-                token={session.token}
-                onRefresh={loadAll}
-              />
+              <DuplicatesTab groups={duplicateGroups} token={session.token} onRefresh={loadAll} />
             )}
             {tab === "credentials" && (
               <CredentialsTab
@@ -408,11 +400,7 @@ function AdminDashboard({
               />
             )}
             {tab === "primary" && (
-              <PrimaryKeysTab
-                primaryKeys={primaryKeys}
-                token={session.token}
-                onRefresh={loadAll}
-              />
+              <PrimaryKeysTab primaryKeys={primaryKeys} token={session.token} onRefresh={loadAll} />
             )}
           </>
         )}
@@ -474,14 +462,19 @@ function KeysTab({
       showToast("Failed to delete key.");
     } finally {
       setDeletingId(null);
-      setSelected((prev) => { const n = new Set(prev); n.delete(id); return n; });
+      setSelected((prev) => {
+        const n = new Set(prev);
+        n.delete(id);
+        return n;
+      });
     }
   };
 
   const bulkDelete = async () => {
     const ids = [...selected];
     if (!ids.length) return;
-    if (!confirm(`Delete ${ids.length} selected key${ids.length === 1 ? "" : "s"} permanently?`)) return;
+    if (!confirm(`Delete ${ids.length} selected key${ids.length === 1 ? "" : "s"} permanently?`))
+      return;
     setBulkDeleting(true);
     try {
       await adminDeleteKeys({ data: { token, ids } });
@@ -532,7 +525,11 @@ function KeysTab({
               disabled={bulkDeleting}
               className="flex h-9 items-center gap-1.5 rounded-lg bg-destructive px-3 text-sm font-medium text-destructive-foreground disabled:opacity-60 hover:opacity-90"
             >
-              {bulkDeleting ? <Loader2 className="size-3.5 animate-spin" /> : <Trash2 className="size-3.5" />}
+              {bulkDeleting ? (
+                <Loader2 className="size-3.5 animate-spin" />
+              ) : (
+                <Trash2 className="size-3.5" />
+              )}
               Delete {selected.size}
             </button>
           </>
@@ -672,7 +669,8 @@ function DuplicatesTab({
           <AlertTriangle className="size-4 shrink-0" />
           <span>
             <strong>{groups.length}</strong> duplicate group{groups.length !== 1 ? "s" : ""} -{" "}
-            <strong>{totalExtras}</strong> extra cop{totalExtras === 1 ? "y" : "ies"} can be removed.
+            <strong>{totalExtras}</strong> extra cop{totalExtras === 1 ? "y" : "ies"} can be
+            removed.
           </span>
         </div>
         <button
@@ -681,7 +679,11 @@ function DuplicatesTab({
           disabled={deleting}
           className="flex shrink-0 items-center gap-1.5 rounded-lg bg-destructive px-3 py-1.5 text-xs font-semibold text-destructive-foreground disabled:opacity-60 hover:opacity-90"
         >
-          {deleting ? <Loader2 className="size-3.5 animate-spin" /> : <Trash2 className="size-3.5" />}
+          {deleting ? (
+            <Loader2 className="size-3.5 animate-spin" />
+          ) : (
+            <Trash2 className="size-3.5" />
+          )}
           Delete all extras
         </button>
       </div>
@@ -814,10 +816,7 @@ function CredentialsTab({
 
       {/* Add form */}
       {showAdd && (
-        <form
-          onSubmit={addCred}
-          className="rounded-xl border border-border bg-card p-4 shadow-sm"
-        >
+        <form onSubmit={addCred} className="rounded-xl border border-border bg-card p-4 shadow-sm">
           <h3 className="mb-3 text-sm font-semibold text-foreground">New admin credential</h3>
           <div className="flex flex-col gap-3">
             <input
@@ -837,9 +836,7 @@ function CredentialsTab({
               placeholder="Password (min 8 chars)"
               className="h-9 rounded-lg border border-input bg-background px-3 text-sm outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring"
             />
-            {addError ? (
-              <p className="text-xs text-destructive">{addError}</p>
-            ) : null}
+            {addError ? <p className="text-xs text-destructive">{addError}</p> : null}
             <button
               type="submit"
               disabled={adding}
@@ -1006,7 +1003,10 @@ function PrimaryKeysTab({
       </div>
 
       {/* Add form */}
-      <form onSubmit={addKey} className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4">
+      <form
+        onSubmit={addKey}
+        className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4"
+      >
         <h2 className="text-sm font-semibold text-foreground">Add a primary key</h2>
         <div className="flex gap-2">
           <input

@@ -26,9 +26,7 @@ function makeSupabaseFetch(key: string): typeof fetch {
   return (input, init) => {
     // Copy headers from the Request object first (if input is a Request)
     const headers = new Headers(
-      typeof Request !== "undefined" && input instanceof Request
-        ? input.headers
-        : undefined,
+      typeof Request !== "undefined" && input instanceof Request ? input.headers : undefined,
     );
     // Then merge any headers from init on top
     if (init?.headers) {
@@ -57,10 +55,7 @@ function makeServerClient() {
 // ---------------------------------------------------------------------------
 
 async function sha256hex(text: string): Promise<string> {
-  const buf = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder().encode(text),
-  );
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
   return Array.from(new Uint8Array(buf))
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
@@ -105,8 +100,7 @@ export const adminLogin = createServerFn({ method: "POST" })
     if (!row) return { ok: false as const, reason: "invalid" as const };
 
     const inputHash = await sha256hex(data.password);
-    if (inputHash !== row.password_hash)
-      return { ok: false as const, reason: "invalid" as const };
+    if (inputHash !== row.password_hash) return { ok: false as const, reason: "invalid" as const };
 
     const token = await makeToken(row.password_hash);
     return { ok: true as const, token, email: row.email };
@@ -116,9 +110,7 @@ export const adminVerifySession = createServerFn({ method: "POST" })
   .validator(z.object({ token: z.string() }))
   .handler(async ({ data }) => {
     const db = makeServerClient();
-    const { data: rows, error } = await db
-      .from("admin_credentials")
-      .select("password_hash, email");
+    const { data: rows, error } = await db.from("admin_credentials").select("password_hash, email");
     if (error) throw new Error(error.message);
     const result = await verifyTokenAgainstCredentials(data.token, rows ?? []);
     if (result.valid) return { ok: true as const, email: result.email };
@@ -142,9 +134,11 @@ export const adminListCredentials = createServerFn({ method: "POST" })
     const { valid } = await verifyTokenAgainstCredentials(data.token, rows ?? []);
     if (!valid) throw new Error("Unauthorized");
 
-    return (rows ?? []).map(
-      (r): AdminCredential => ({ id: r.id, email: r.email, createdAt: r.created_at }),
-    );
+    return (rows ?? []).map((r): AdminCredential => ({
+      id: r.id,
+      email: r.email,
+      createdAt: r.created_at,
+    }));
   });
 
 // ---------------------------------------------------------------------------
@@ -169,9 +163,7 @@ export const adminListKeys = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     // Auth check
     const authDb = makeServerClient();
-    const { data: creds } = await authDb
-      .from("admin_credentials")
-      .select("password_hash, email");
+    const { data: creds } = await authDb.from("admin_credentials").select("password_hash, email");
     const { valid } = await verifyTokenAgainstCredentials(data.token, creds ?? []);
     if (!valid) throw new Error("Unauthorized");
 
@@ -183,22 +175,18 @@ export const adminListKeys = createServerFn({ method: "POST" })
       .limit(5000);
     if (error) throw new Error(error.message);
 
-    return (rows ?? []).map(
-      (row): AdminKeyItem => ({
-        id: row.id,
-        keyText: row.key_text,
-        createdAt: row.created_at,
-      }),
-    );
+    return (rows ?? []).map((row): AdminKeyItem => ({
+      id: row.id,
+      keyText: row.key_text,
+      createdAt: row.created_at,
+    }));
   });
 
 export const adminDeleteKey = createServerFn({ method: "POST" })
   .validator(z.object({ token: z.string(), id: z.string().uuid() }))
   .handler(async ({ data }) => {
     const authDb = makeServerClient();
-    const { data: creds } = await authDb
-      .from("admin_credentials")
-      .select("password_hash, email");
+    const { data: creds } = await authDb.from("admin_credentials").select("password_hash, email");
     const { valid } = await verifyTokenAgainstCredentials(data.token, creds ?? []);
     if (!valid) throw new Error("Unauthorized");
 
@@ -212,9 +200,7 @@ export const adminDeleteKeys = createServerFn({ method: "POST" })
   .validator(z.object({ token: z.string(), ids: z.array(z.string().uuid()) }))
   .handler(async ({ data }) => {
     const authDb = makeServerClient();
-    const { data: creds } = await authDb
-      .from("admin_credentials")
-      .select("password_hash, email");
+    const { data: creds } = await authDb.from("admin_credentials").select("password_hash, email");
     const { valid } = await verifyTokenAgainstCredentials(data.token, creds ?? []);
     if (!valid) throw new Error("Unauthorized");
 
@@ -235,9 +221,7 @@ export const adminAddCredential = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     const authDb = makeServerClient();
-    const { data: creds } = await authDb
-      .from("admin_credentials")
-      .select("password_hash, email");
+    const { data: creds } = await authDb.from("admin_credentials").select("password_hash, email");
     const { valid } = await verifyTokenAgainstCredentials(data.token, creds ?? []);
     if (!valid) throw new Error("Unauthorized");
 
@@ -254,17 +238,12 @@ export const adminRemoveCredential = createServerFn({ method: "POST" })
   .validator(z.object({ token: z.string(), id: z.string().uuid() }))
   .handler(async ({ data }) => {
     const authDb = makeServerClient();
-    const { data: creds } = await authDb
-      .from("admin_credentials")
-      .select("password_hash, email");
+    const { data: creds } = await authDb.from("admin_credentials").select("password_hash, email");
     const { valid } = await verifyTokenAgainstCredentials(data.token, creds ?? []);
     if (!valid) throw new Error("Unauthorized");
 
     const db = makeAdminClient();
-    const { error } = await db
-      .from("admin_credentials")
-      .delete()
-      .eq("id", data.id);
+    const { error } = await db.from("admin_credentials").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
@@ -284,9 +263,7 @@ export const adminListPrimaryKeys = createServerFn({ method: "POST" })
   .validator(z.object({ token: z.string() }))
   .handler(async ({ data }) => {
     const authDb = makeServerClient();
-    const { data: creds } = await authDb
-      .from("admin_credentials")
-      .select("password_hash, email");
+    const { data: creds } = await authDb.from("admin_credentials").select("password_hash, email");
     const { valid } = await verifyTokenAgainstCredentials(data.token, creds ?? []);
     if (!valid) throw new Error("Unauthorized");
 
@@ -298,23 +275,19 @@ export const adminListPrimaryKeys = createServerFn({ method: "POST" })
       .order("created_at", { ascending: true });
     if (error) throw new Error(error.message);
 
-    return (rows ?? []).map(
-      (r): AdminPrimaryKeyItem => ({
-        id: r.id,
-        keyText: r.key_text,
-        sortOrder: r.sort_order,
-        createdAt: r.created_at,
-      }),
-    );
+    return (rows ?? []).map((r): AdminPrimaryKeyItem => ({
+      id: r.id,
+      keyText: r.key_text,
+      sortOrder: r.sort_order,
+      createdAt: r.created_at,
+    }));
   });
 
 export const adminAddPrimaryKey = createServerFn({ method: "POST" })
   .validator(z.object({ token: z.string(), keyText: z.string().min(1).max(300) }))
   .handler(async ({ data }) => {
     const authDb = makeServerClient();
-    const { data: creds } = await authDb
-      .from("admin_credentials")
-      .select("password_hash, email");
+    const { data: creds } = await authDb.from("admin_credentials").select("password_hash, email");
     const { valid } = await verifyTokenAgainstCredentials(data.token, creds ?? []);
     if (!valid) throw new Error("Unauthorized");
 
@@ -345,9 +318,7 @@ export const adminDeletePrimaryKey = createServerFn({ method: "POST" })
   .validator(z.object({ token: z.string(), id: z.string().uuid() }))
   .handler(async ({ data }) => {
     const authDb = makeServerClient();
-    const { data: creds } = await authDb
-      .from("admin_credentials")
-      .select("password_hash, email");
+    const { data: creds } = await authDb.from("admin_credentials").select("password_hash, email");
     const { valid } = await verifyTokenAgainstCredentials(data.token, creds ?? []);
     if (!valid) throw new Error("Unauthorized");
 
@@ -356,4 +327,3 @@ export const adminDeletePrimaryKey = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
-
