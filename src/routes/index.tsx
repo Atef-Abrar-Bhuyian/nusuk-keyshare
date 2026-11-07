@@ -136,13 +136,7 @@ function TabButton({
 function KeyList() {
   const { data: keys } = useSuspenseQuery(keysQueryOptions);
   const queryClient = useQueryClient();
-  const {
-    doneIds,
-    toggleDone,
-    unmarkDone,
-    clearAllDone,
-    hydrated: doneHydrated,
-  } = useDoneKeys();
+  const { doneIds, toggleDone, unmarkDone, clearAllDone, hydrated: doneHydrated } = useDoneKeys();
   const {
     notWorkingIds,
     toggleNotWorking,
@@ -173,7 +167,9 @@ function KeyList() {
     if (!wasDone) unmarkNotWorking(id);
     toggleDone(id);
     toast(wasDone ? "Marked as to-do" : "Marked as done", {
-      description: wasDone ? "Key moved back to your to-do list." : "Key removed from your active list.",
+      description: wasDone
+        ? "Key moved back to your to-do list."
+        : "Key removed from your active list.",
     });
   };
 
@@ -182,7 +178,9 @@ function KeyList() {
     if (!wasNotWorking) unmarkDone(id);
     toggleNotWorking(id);
     toast(wasNotWorking ? "Unmarked" : "Marked as not working", {
-      description: wasNotWorking ? "Key is back in your active list." : "Key flagged as not working.",
+      description: wasNotWorking
+        ? "Key is back in your active list."
+        : "Key flagged as not working.",
     });
   };
 
@@ -277,10 +275,7 @@ function KeyList() {
           <FilterChip active={filter === "done"} onClick={() => setFilter("done")}>
             Done {hydrated ? doneCount : ""}
           </FilterChip>
-          <FilterChip
-            active={filter === "notWorking"}
-            onClick={() => setFilter("notWorking")}
-          >
+          <FilterChip active={filter === "notWorking"} onClick={() => setFilter("notWorking")}>
             Not working {hydrated ? notWorkingCount : ""}
           </FilterChip>
           <FilterChip active={filter === "all"} onClick={() => setFilter("all")}>
@@ -390,7 +385,9 @@ function KeyRow({
       timerRef.current = window.setTimeout(() => setCopied(false), 1500);
       toast.success("Key copied!", { description: "The key has been copied to your clipboard." });
     } else {
-      toast.error("Copy failed", { description: "Could not access the clipboard. Please copy manually." });
+      toast.error("Copy failed", {
+        description: "Could not access the clipboard. Please copy manually.",
+      });
     }
   };
 
@@ -421,9 +418,7 @@ function KeyRow({
           aria-label={copied ? "Copied" : "Copy key"}
           className={cn(
             "flex flex-1 items-center justify-center gap-1.5 py-2.5 text-xs font-semibold transition-colors",
-            copied
-              ? "text-primary"
-              : "text-muted-foreground hover:text-foreground",
+            copied ? "text-primary" : "text-muted-foreground hover:text-foreground",
           )}
         >
           <Copy className="size-3.5" />
@@ -439,9 +434,7 @@ function KeyRow({
           aria-pressed={done}
           className={cn(
             "flex flex-1 items-center justify-center gap-1.5 py-2.5 text-xs font-semibold transition-colors",
-            done
-              ? "text-primary"
-              : "text-muted-foreground hover:text-foreground",
+            done ? "text-primary" : "text-muted-foreground hover:text-foreground",
           )}
         >
           <CheckCircle2 className="size-3.5" />
@@ -457,9 +450,7 @@ function KeyRow({
           aria-pressed={notWorking}
           className={cn(
             "flex flex-1 items-center justify-center gap-1.5 py-2.5 text-xs font-semibold transition-colors",
-            notWorking
-              ? "text-destructive"
-              : "text-muted-foreground hover:text-foreground",
+            notWorking ? "text-destructive" : "text-muted-foreground hover:text-foreground",
           )}
         >
           <XCircle className="size-3.5" />
@@ -613,7 +604,6 @@ function DarudPanel() {
 
       <main className="py-6">
         <div className="flex flex-col gap-6">
-
           {/* Sacred Places Gallery */}
           <div className="px-4">
             <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
@@ -628,7 +618,8 @@ function DarudPanel() {
                 />
                 <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/70 via-transparent to-transparent">
                   <p className="w-full px-3 pb-3 text-xs font-semibold text-white">
-                    Masjid al-Haram<br />
+                    Masjid al-Haram
+                    <br />
                     <span className="font-normal opacity-80">Mecca, Saudi Arabia</span>
                   </p>
                 </div>
@@ -641,7 +632,8 @@ function DarudPanel() {
                 />
                 <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/70 via-transparent to-transparent">
                   <p className="w-full px-3 pb-3 text-xs font-semibold text-white">
-                    Masjid al-Nabawi<br />
+                    Masjid al-Nabawi
+                    <br />
                     <span className="font-normal opacity-80">Madina, Saudi Arabia</span>
                   </p>
                 </div>
@@ -681,10 +673,7 @@ function DarudPanel() {
             </p>
             <div className="flex flex-col gap-4">
               {DARUD_LIST.map((d) => (
-                <div
-                  key={d.id}
-                  className="rounded-xl border border-border bg-card p-4 shadow-sm"
-                >
+                <div key={d.id} className="rounded-xl border border-border bg-card p-4 shadow-sm">
                   {/* Title row */}
                   <div className="flex items-center justify-between gap-2">
                     <h2 className="font-semibold text-foreground">{d.title}</h2>
@@ -729,7 +718,6 @@ function DarudPanel() {
             <br />
             <span className="mt-1 block text-gold">آمين</span>
           </p>
-
         </div>
       </main>
     </>
@@ -766,7 +754,6 @@ function InfoPanel() {
 
       <main className="px-4 py-6">
         <div className="flex flex-col gap-4">
-
           {/* Use one browser */}
           <InfoCard
             icon={<Monitor className="size-5 text-amber-500" />}
@@ -775,12 +762,12 @@ function InfoPanel() {
           >
             <p>
               Your "done" and "not working" marks are saved in{" "}
-              <strong>this browser's local storage</strong> - they are{" "}
-              <em>private to you</em> and never stored on the server.
+              <strong>this browser's local storage</strong> - they are <em>private to you</em> and
+              never stored on the server.
             </p>
             <p className="mt-2">
-              If you switch to a different browser or device your marks will not carry over.
-              Stick to the same browser so your progress is always visible.
+              If you switch to a different browser or device your marks will not carry over. Stick
+              to the same browser so your progress is always visible.
             </p>
           </InfoCard>
 
@@ -791,11 +778,13 @@ function InfoPanel() {
             accent="green"
           >
             <ol className="flex flex-col gap-2 pl-1">
-              <StepItem n={1}>Tap the <strong>Add keys</strong> tab at the bottom.</StepItem>
+              <StepItem n={1}>
+                Tap the <strong>Add keys</strong> tab at the bottom.
+              </StepItem>
               <StepItem n={2}>Type or paste your key into the input field.</StepItem>
               <StepItem n={3}>
-                Need to add more? Tap <strong>Add another key</strong> (or press Enter) to get a
-                new field.
+                Need to add more? Tap <strong>Add another key</strong> (or press Enter) to get a new
+                field.
               </StepItem>
               <StepItem n={4}>
                 When ready, tap <strong>Add keys</strong> - duplicates are skipped automatically.
@@ -810,8 +799,12 @@ function InfoPanel() {
             accent="blue"
           >
             <ol className="flex flex-col gap-2 pl-1">
-              <StepItem n={1}>Go to the <strong>Keys</strong> tab.</StepItem>
-              <StepItem n={2}>Find a key you want to use and tap <strong>Copy</strong>.</StepItem>
+              <StepItem n={1}>
+                Go to the <strong>Keys</strong> tab.
+              </StepItem>
+              <StepItem n={2}>
+                Find a key you want to use and tap <strong>Copy</strong>.
+              </StepItem>
               <StepItem n={3}>
                 Paste it on your nusuk app - the key is now on your clipboard.
               </StepItem>
@@ -870,8 +863,8 @@ function InfoPanel() {
             accent="blue"
           >
             <p>
-              Have a suggestion, found a bug, or just want to say something?
-              Feel free to reach out — we'd love to hear from you.
+              Have a suggestion, found a bug, or just want to say something? Feel free to reach out
+              — we'd love to hear from you.
             </p>
             <div className="mt-3 flex items-center gap-2">
               <a
@@ -894,7 +887,6 @@ function InfoPanel() {
               </button>
             </div>
           </InfoCard>
-
         </div>
       </main>
     </>
@@ -1003,12 +995,10 @@ function AddKeys({ onDone }: { onDone: () => void }) {
       const skipped = parsed.length - fresh.length;
 
       if (fresh.length > 0) {
-        const { error: insertError } = await supabase
-          .from("keys")
-          .upsert(
-            fresh.map((keyText) => ({ key_text: keyText })),
-            { ignoreDuplicates: true, onConflict: "key_text" },
-          );
+        const { error: insertError } = await supabase.from("keys").upsert(
+          fresh.map((keyText) => ({ key_text: keyText })),
+          { ignoreDuplicates: true, onConflict: "key_text" },
+        );
         if (insertError) throw new Error(insertError.message);
       }
 
@@ -1113,8 +1103,8 @@ function AddKeys({ onDone }: { onDone: () => void }) {
             </p>
             {result.skipped > 0 ? (
               <p className="mt-1 text-muted-foreground">
-                {result.skipped} duplicate{result.skipped === 1 ? " was" : "s were"} skipped -
-                they were already on the list.
+                {result.skipped} duplicate{result.skipped === 1 ? " was" : "s were"} skipped - they
+                were already on the list.
               </p>
             ) : null}
             <Button onClick={onDone} className="mt-3 w-full">
@@ -1134,7 +1124,9 @@ function AddKeys({ onDone }: { onDone: () => void }) {
           disabled={parsed.length === 0 || tooMany || submitting}
           className="mt-4 h-12 w-full text-base"
         >
-          {submitting ? "Adding…" : `Add ${parsed.length || ""} ${parsed.length === 1 ? "key" : "keys"}`}
+          {submitting
+            ? "Adding…"
+            : `Add ${parsed.length || ""} ${parsed.length === 1 ? "key" : "keys"}`}
         </Button>
       </main>
     </>
