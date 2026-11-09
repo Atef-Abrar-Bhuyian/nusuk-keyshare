@@ -154,7 +154,9 @@ export const adminListCredentials = createServerFn({ method: "POST" })
 function makeAdminClient() {
   const url = process.env["VITE_SUPABASE_URL"]!;
   // Prefer service/secret role key; fall back to publishable
+  // The secret must NOT be VITE_-prefixed, or Vite inlines it into the client bundle.
   const key =
+    process.env["SUPABASE_SERVICE_ROLE_KEY"] ??
     process.env["VITE_SUPABASE_SERVICE_ROLE_KEY"] ??
     process.env["SUPABASE_SECRET_KEY"] ??
     process.env["VITE_SUPABASE_PUBLISHABLE_KEY"]!;
