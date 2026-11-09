@@ -10,8 +10,8 @@ export type KeyItem = {
 };
 
 function makePublicClient() {
-  const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
-  return createClient<Database>(process.env["SUPABASE_URL"]!, key, {
+  const key = process.env["VITE_SUPABASE_PUBLISHABLE_KEY"]!;
+  return createClient<Database>(process.env["VITE_SUPABASE_URL"]!, key, {
     auth: { persistSession: false, autoRefreshToken: false, storage: undefined },
     global: {
       fetch: (input, init) => {

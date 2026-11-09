@@ -17,9 +17,9 @@ bun run dev
 
 Environment variables (see `.env`):
 
-- `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLISHABLE_KEY` - Supabase project URL and publishable key for the browser.
-- `SUPABASE_URL` / `SUPABASE_PUBLISHABLE_KEY` - the same values for server-side rendering and server functions.
-- `SUPABASE_SERVICE_ROLE_KEY` - optional, only for trusted server-side admin operations.
+- `VITE_VITE_SUPABASE_URL` / `VITE_VITE_SUPABASE_PUBLISHABLE_KEY` - Supabase project URL and publishable key for the browser.
+- `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLISHABLE_KEY` - the same values for server-side rendering and server functions.
+- `VITE_SUPABASE_SERVICE_ROLE_KEY` - optional, only for trusted server-side admin operations.
 
 ## Scripts
 
